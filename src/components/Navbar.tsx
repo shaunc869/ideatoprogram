@@ -35,6 +35,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-4">
           <Link href="/lessons" className="text-sm hover:text-indigo-400 transition">Lessons</Link>
           <Link href="/projects" className="text-sm hover:text-indigo-400 transition">Projects</Link>
+          <Link href="/paths" className="text-sm hover:text-indigo-400 transition">Paths</Link>
           <Link href="/daily" className="text-sm hover:text-orange-400 transition">Daily</Link>
           <Link href="/vibe" className="text-sm font-medium bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent hover:from-pink-300 hover:to-orange-300 transition">Vibe Code</Link>
           {user ? (
