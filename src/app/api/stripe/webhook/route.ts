@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 import { subscribe } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   let event;
   try {
     if (webhookSecret && sig) {
-      event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
+      event = getStripe().webhooks.constructEvent(body, sig, webhookSecret);
     } else {
       // In development without webhook secret, parse directly
       event = JSON.parse(body);

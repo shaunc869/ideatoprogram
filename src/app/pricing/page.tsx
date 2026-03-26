@@ -7,6 +7,7 @@ export default function PricingPage() {
   const [user, setUser] = useState<{ isPro: boolean; subscriptions: { plan: string }[] } | null>(null);
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [students, setStudents] = useState(5);
 
   useEffect(() => {
     fetch("/api/auth/me").then((r) => r.json()).then((d) => { if (!d.error) setUser(d.user); }).catch(() => {});
@@ -20,7 +21,7 @@ export default function PricingPage() {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan, billing }),
+        body: JSON.stringify({ plan, billing, students: plan === "school" ? students : undefined }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -38,7 +39,7 @@ export default function PricingPage() {
     { id: "pro_python", name: "Python Pro", desc: "100 Python lessons", monthly: 5, yearly: 50, yearlySave: 10, icon: "🐍", features: ["100 Python pro lessons", "Guided projects", "Certificates", "Everything in Free"] },
     { id: "pro_javascript", name: "JavaScript Pro", desc: "100 JS lessons", monthly: 5, yearly: 50, yearlySave: 10, icon: "⚡", features: ["100 JavaScript pro lessons", "Guided projects", "Certificates", "Everything in Free"] },
     { id: "pro_all", name: "Pro All", desc: "All 210 lessons", monthly: 10, yearly: 100, yearlySave: 20, icon: "🚀", featured: true, features: ["All 210 lessons", "Python + JavaScript", "All guided projects", "All certificates", "Everything in Free"] },
-    { id: "vibe_pro", name: "Vibe Pro", desc: "Unlimited AI coding", monthly: 15, yearly: 150, yearlySave: 30, icon: "🤖", features: ["Unlimited AI prompts", "Vibe Code Studio", "Build anything with AI", "Separate from lesson plans"] },
+    { id: "vibe_pro", name: "Vibe Pro", desc: "Unlimited AI coding", monthly: 20.99, yearly: 150, yearlySave: 101.88, icon: "🤖", features: ["Unlimited AI prompts", "Vibe Code Studio", "Build anything with AI", "Separate from lesson plans"] },
   ];
 
   return (
@@ -133,12 +134,60 @@ export default function PricingPage() {
         </p>
       </div>
 
-      {/* Teams */}
-      <div className="bg-[#1e293b] border border-[#334155] rounded-2xl p-8 text-center">
-        <h2 className="text-2xl font-bold mb-3">Team &amp; Classroom Plans</h2>
-        <p className="text-gray-400 mb-4">Get IdeaToProgram Pro for your entire class or team. $5/student/month.</p>
-        <p className="text-gray-500 text-sm mb-6">Includes all 210 lessons, progress tracking per student, and admin dashboard.</p>
-        <a href="mailto:teams@ideatoprogram.com" className="inline-block px-6 py-3 border border-[#334155] hover:border-indigo-500 rounded-xl font-medium transition">Contact Sales</a>
+      {/* School Plan */}
+      <div className="bg-gradient-to-b from-emerald-600/10 to-teal-600/10 border-2 border-emerald-500/30 rounded-2xl p-8">
+        <div className="text-center mb-8">
+          <div className="text-3xl mb-2">🏫</div>
+          <h2 className="text-2xl font-bold mb-2">School &amp; Classroom Plan</h2>
+          <p className="text-gray-400">Give your entire class access to all 210 lessons, projects, and certificates.</p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+          {/* Monthly */}
+          <div className="bg-[#1e293b] border border-[#334155] rounded-xl p-6">
+            <h3 className="font-bold text-lg mb-1">Monthly</h3>
+            <div className="text-3xl font-extrabold mb-1">$1<span className="text-lg font-normal text-gray-400">/student/mo</span></div>
+            <p className="text-sm text-gray-500 mb-4">Minimum 5 students</p>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Number of students</label>
+              <div className="flex items-center gap-3">
+                <button onClick={() => setStudents(Math.max(5, students - 1))} className="w-10 h-10 bg-[#0f172a] border border-[#334155] rounded-lg text-lg hover:border-emerald-500 transition">-</button>
+                <input type="number" min={5} value={students} onChange={(e) => setStudents(Math.max(5, parseInt(e.target.value) || 5))}
+                  className="w-20 text-center px-3 py-2 bg-[#0f172a] border border-[#334155] rounded-lg focus:border-emerald-500 focus:outline-none text-lg font-bold" />
+                <button onClick={() => setStudents(students + 1)} className="w-10 h-10 bg-[#0f172a] border border-[#334155] rounded-lg text-lg hover:border-emerald-500 transition">+</button>
+              </div>
+            </div>
+
+            <div className="text-2xl font-bold text-emerald-400 mb-4">${students}/mo</div>
+
+            <button onClick={() => handleSubscribe("school")} disabled={loadingPlan === "school"}
+              className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 rounded-xl text-sm font-bold transition disabled:opacity-50">
+              {loadingPlan === "school" ? "Redirecting..." : `Subscribe for ${students} students`}
+            </button>
+          </div>
+
+          {/* Yearly */}
+          <div className="bg-[#1e293b] border border-emerald-500/30 rounded-xl p-6 relative">
+            <div className="absolute -top-3 right-4 bg-emerald-500 text-xs font-bold px-2 py-0.5 rounded-full text-black">BEST FOR SCHOOLS</div>
+            <h3 className="font-bold text-lg mb-1">Yearly</h3>
+            <div className="text-3xl font-extrabold mb-1">$1,500<span className="text-lg font-normal text-gray-400">/yr</span></div>
+            <p className="text-sm text-emerald-400 font-medium mb-4">Unlimited students!</p>
+
+            <ul className="space-y-2 text-sm text-gray-300 mb-6">
+              <li className="flex items-start gap-2"><span className="text-emerald-400">✓</span> Unlimited students</li>
+              <li className="flex items-start gap-2"><span className="text-emerald-400">✓</span> All 210 lessons</li>
+              <li className="flex items-start gap-2"><span className="text-emerald-400">✓</span> Progress tracking per student</li>
+              <li className="flex items-start gap-2"><span className="text-emerald-400">✓</span> Admin dashboard</li>
+              <li className="flex items-start gap-2"><span className="text-emerald-400">✓</span> Certificates for each student</li>
+            </ul>
+
+            <button onClick={() => { setBilling("yearly"); handleSubscribe("school"); }} disabled={loadingPlan === "school"}
+              className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 rounded-xl text-sm font-bold transition disabled:opacity-50">
+              {loadingPlan === "school" ? "Redirecting..." : "Subscribe - $1,500/year"}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
