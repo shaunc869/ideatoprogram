@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken, canUseVibe, recordVibeUsage, updateVibeProject } from "@/lib/db";
+import { verifyToken, canUseVibe, recordVibeUsage, updateVibeProject, getUserById } from "@/lib/db";
 import type Anthropic from "@anthropic-ai/sdk";
 
 // ---------------------------------------------------------------------------
@@ -1683,7 +1683,8 @@ export async function POST(req: NextRequest) {
   const { prompt, code, language, projectId } = await req.json();
 
   // Check usage limits
-  if (!canUseVibe(userId)) {
+  const usage = canUseVibe(userId);
+  if (!usage.allowed) {
     return NextResponse.json(
       { error: "You've used all 10 free AI prompts. Upgrade to Vibe Pro for unlimited access!" },
       { status: 403 },
@@ -1693,6 +1694,12 @@ export async function POST(req: NextRequest) {
   // Record usage
   recordVibeUsage(userId);
 
+  // Check if user is a pro subscriber (Vibe Pro or Pro All)
+  const user = getUserById(userId);
+  const isPro = user?.isVibeUnlimited || user?.subscriptions?.some(
+    (s) => s.plan === "vibe_pro" || s.plan === "pro_all"
+  ) || false;
+
   let response: VibeResponse;
 
   // If Anthropic API key is set, use Claude
@@ -1701,12 +1708,28 @@ export async function POST(req: NextRequest) {
       const AnthropicSDK = (await import("@anthropic-ai/sdk")).default;
       const client = new AnthropicSDK() as InstanceType<typeof Anthropic>;
 
-      const systemPrompt =
-        `You are an AI coding assistant in Vibe Code Studio. The user describes what they want and you write complete, working code. Always respond with JSON: {"message": "explanation", "code": "the complete code"}. Language: ${language || "python"}. Current code: ${code || "empty project"}.`;
+      // Pro users get advanced full-featured code generation
+      // Free users get basic simple examples
+      const systemPrompt = isPro
+        ? `You are an expert AI coding assistant in Vibe Code Studio (PRO MODE). The user has a paid subscription. Generate COMPLETE, PRODUCTION-QUALITY, FULLY-FEATURED code. Include:
+- Full error handling and input validation
+- Clean architecture with classes/modules
+- Comments explaining complex parts
+- Multiple features, not just the basics
+- Professional formatting and best practices
+- If they ask for a game: include scoring, menus, difficulty levels, replay
+- If they ask for an app: include CRUD, search, sorting, data persistence
+- If they ask for a website: include multiple pages, navigation, styling
+Write the most impressive, complete version possible. Language: ${language || "python"}. Current code: ${code || "empty project"}.
+Always respond with JSON: {"message": "explanation of what was built and all features", "code": "the complete code"}`
+        : `You are an AI coding assistant in Vibe Code Studio (FREE MODE). Generate simple, working code that demonstrates the basic concept. Keep it short and beginner-friendly (under 50 lines). Language: ${language || "python"}. Current code: ${code || "empty project"}.
+Always respond with JSON: {"message": "brief explanation", "code": "the code"}`;
+
+      const maxTokens = isPro ? 8192 : 2048;
 
       const message = await client.messages.create({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 4096,
+        model: isPro ? "claude-sonnet-4-6" : "claude-haiku-4-5-20251001",
+        max_tokens: maxTokens,
         system: systemPrompt,
         messages: [{ role: "user", content: prompt }],
       });
@@ -1721,7 +1744,6 @@ export async function POST(req: NextRequest) {
           code: parsed.code || null,
         };
       } catch {
-        // If Claude didn't return valid JSON, use the text as the message
         response = { message: responseText, code: null };
       }
     } catch (error) {
@@ -1729,8 +1751,12 @@ export async function POST(req: NextRequest) {
       response = generateVibeResponse(prompt, code ?? null, language ?? "python");
     }
   } else {
-    // Fallback: pattern-matching response
+    // Fallback: pattern-matching response (always basic for non-API)
     response = generateVibeResponse(prompt, code ?? null, language ?? "python");
+    // For pro users without API key, add a note
+    if (isPro) {
+      response.message = "⚡ PRO MODE: " + response.message + "\n\n(Connect an Anthropic API key for full AI-powered generation)";
+    }
   }
 
   // Auto-save if projectId and generated code
