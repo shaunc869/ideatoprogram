@@ -1,6 +1,6 @@
 {
-  "name": "CodeLearner",
-  "short_name": "CodeLearner",
+  "name": "IdeaToProgram",
+  "short_name": "IdeaToProgram",
   "description": "Learn Python & JavaScript with 220+ lessons, AI tutor, and Vibe Code Studio",
   "start_url": "/",
   "display": "standalone",

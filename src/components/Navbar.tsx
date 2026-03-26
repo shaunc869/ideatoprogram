@@ -28,7 +28,7 @@ export default function Navbar() {
     <nav className="border-b border-[#334155] bg-[#1e293b] sticky top-0 z-40">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-          CodeLearner
+          IdeaToProgram
         </Link>
 
         {/* Desktop nav */}

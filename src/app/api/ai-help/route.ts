@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
       const client = new Anthropic();
 
       const systemPrompt =
-        `You are a friendly coding tutor on CodeLearner. Help the student understand concepts, debug code, and solve challenges. Don't give away answers directly - guide them to figure it out. Keep responses concise (under 200 words). The student is working on: ${lessonTitle || "a coding lesson"}. Language: ${language || "python"}.`;
+        `You are a friendly coding tutor on IdeaToProgram. Help the student understand concepts, debug code, and solve challenges. Don't give away answers directly - guide them to figure it out. Keep responses concise (under 200 words). The student is working on: ${lessonTitle || "a coding lesson"}. Language: ${language || "python"}.`;
 
       let userMessage = question;
       if (code) {

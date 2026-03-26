@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
       const resetLink = `${baseUrl}/reset-password?token=${token}`;
 
       await resend.emails.send({
-        from: "CodeLearner <noreply@codelearner.dev>",
+        from: "IdeaToProgram <noreply@codelearner.dev>",
         to: email,
         subject: "Reset your password",
         html: `<p>Click the link below to reset your password:</p><p><a href="${resetLink}">${resetLink}</a></p><p>This link will expire in 1 hour.</p>`,

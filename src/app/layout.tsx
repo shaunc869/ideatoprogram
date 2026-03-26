@@ -11,7 +11,7 @@ const geistSans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "CodeLearner - Learn Python & JavaScript",
+  title: "IdeaToProgram - Learn Python & JavaScript",
   description: "Master programming with 220+ lessons, AI tutor, and Vibe Code Studio.",
   manifest: "/manifest.json",
 };

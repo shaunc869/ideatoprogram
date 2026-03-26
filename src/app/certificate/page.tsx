@@ -151,7 +151,7 @@ export default function CertificatePage() {
             <div className="relative">
               <p className="text-xs uppercase tracking-[4px] text-indigo-400 mb-2">Certificate of Completion</p>
               <div className="w-24 h-0.5 bg-indigo-600 mx-auto my-4" />
-              <h2 className="text-3xl font-bold mb-6">CodeLearner</h2>
+              <h2 className="text-3xl font-bold mb-6">IdeaToProgram</h2>
               <p className="text-gray-400 mb-2">This is to certify that</p>
               <p className="text-2xl font-semibold text-indigo-300 italic my-4">{user.name}</p>
               <p className="text-gray-400 mb-2">has successfully completed the</p>

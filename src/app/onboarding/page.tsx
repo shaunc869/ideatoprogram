@@ -34,7 +34,7 @@ export default function OnboardingPage() {
       <div className="max-w-3xl w-full text-center">
         <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
           Welcome to{" "}
-          <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">CodeLearner</span>
+          <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">IdeaToProgram</span>
         </h1>
         <p className="text-xl text-gray-400 mb-12">Choose your learning path to get started. You can always switch later.</p>
 

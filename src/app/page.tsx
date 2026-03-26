@@ -41,27 +41,27 @@ export default function Home() {
               <div className="w-3 h-3 rounded-full bg-red-500" />
               <div className="w-3 h-3 rounded-full bg-yellow-500" />
               <div className="w-3 h-3 rounded-full bg-green-500" />
-              <span className="ml-3 text-xs text-gray-500">lesson_01.py &#8212; CodeLearner</span>
+              <span className="ml-3 text-xs text-gray-500">lesson_01.py &#8212; IdeaToProgram</span>
             </div>
             <div className="p-6 font-mono text-sm leading-relaxed">
               <div className="text-gray-500"># &#127891; Your first Python program</div>
               <div><span className="text-purple-400">def</span> <span className="text-yellow-300">greet</span><span className="text-gray-400">(</span><span className="text-orange-300">name</span><span className="text-gray-400">):</span></div>
-              <div className="pl-8"><span className="text-purple-400">return</span> <span className="text-green-400">f&quot;Hello, &#123;name&#125;! Welcome to CodeLearner &#127881;&quot;</span></div>
+              <div className="pl-8"><span className="text-purple-400">return</span> <span className="text-green-400">f&quot;Hello, &#123;name&#125;! Welcome to IdeaToProgram &#127881;&quot;</span></div>
               <div className="mt-2"><span className="text-blue-400">print</span><span className="text-gray-400">(</span><span className="text-yellow-300">greet</span><span className="text-gray-400">(</span><span className="text-green-400">&quot;You&quot;</span><span className="text-gray-400">))</span></div>
               <div className="mt-4 pt-4 border-t border-[#334155]">
                 <span className="text-gray-500">&#9654; Output:</span>
-                <div className="text-green-400 mt-1">Hello, You! Welcome to CodeLearner &#127881;</div>
+                <div className="text-green-400 mt-1">Hello, You! Welcome to IdeaToProgram &#127881;</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Why CodeLearner */}
+      {/* Why IdeaToProgram */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why CodeLearner?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why IdeaToProgram?</h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">Everything you need to go from zero to professional developer, all in one platform.</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -207,7 +207,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">What Learners Say</h2>
-            <p className="text-gray-400 text-lg">Join thousands who changed their careers with CodeLearner.</p>
+            <p className="text-gray-400 text-lg">Join thousands who changed their careers with IdeaToProgram.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-[#0f172a] border border-[#334155] rounded-2xl p-6">
@@ -251,14 +251,14 @@ export default function Home() {
       <section className="py-20 px-4">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">CodeLearner vs. The Rest</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">IdeaToProgram vs. The Rest</h2>
           </div>
           <div className="bg-[#1e293b] border border-[#334155] rounded-2xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-[#334155]">
                   <th className="text-left p-4 text-gray-400 font-medium">Feature</th>
-                  <th className="p-4 text-center text-indigo-400 font-bold">CodeLearner</th>
+                  <th className="p-4 text-center text-indigo-400 font-bold">IdeaToProgram</th>
                   <th className="p-4 text-center text-gray-500 font-medium">Others</th>
                 </tr>
               </thead>
@@ -349,7 +349,7 @@ export default function Home() {
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Start Coding?</h2>
           <p className="text-gray-400 text-lg mb-8">
-            Join thousands of learners who are building real skills with CodeLearner. Your first 10 lessons are completely free.
+            Join thousands of learners who are building real skills with IdeaToProgram. Your first 10 lessons are completely free.
           </p>
           <Link href="/signup" className="inline-block px-10 py-4 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-bold text-lg transition shadow-lg shadow-indigo-500/25">
             Create Your Free Account &#8594;
@@ -365,14 +365,14 @@ export default function Home() {
       {/* Footer */}
       <footer className="py-10 px-4 border-t border-[#334155] bg-[#0f172a]">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">CodeLearner</div>
+          <div className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">IdeaToProgram</div>
           <div className="flex items-center gap-6 text-sm text-gray-500">
             <Link href="/lessons" className="hover:text-white transition">Lessons</Link>
             <Link href="/upgrade" className="hover:text-white transition">Pricing</Link>
             <Link href="/signup" className="hover:text-white transition">Sign Up</Link>
             <Link href="/login" className="hover:text-white transition">Log In</Link>
           </div>
-          <p className="text-sm text-gray-600">&copy; 2026 CodeLearner. All rights reserved.</p>
+          <p className="text-sm text-gray-600">&copy; 2026 IdeaToProgram. All rights reserved.</p>
         </div>
       </footer>
     </div>

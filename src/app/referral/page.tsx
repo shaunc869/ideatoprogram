@@ -55,7 +55,7 @@ export default function ReferralPage() {
         </div>
         <p className="text-sm text-gray-400">Share this link with friends:</p>
         <div className="mt-2 px-3 py-2 bg-[#0f172a] rounded-lg text-sm text-indigo-400 break-all">
-          codelearner.com/signup?ref={referralCode}
+          ideatoprogram.com/signup?ref={referralCode}
         </div>
       </div>
 

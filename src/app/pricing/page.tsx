@@ -145,7 +145,7 @@ export default function PricingPage() {
       {/* Teams */}
       <div className="bg-[#1e293b] border border-[#334155] rounded-2xl p-8 text-center">
         <h2 className="text-2xl font-bold mb-3">Team &amp; Classroom Plans</h2>
-        <p className="text-gray-400 mb-4">Get CodeLearner Pro for your entire class or team. $5/student/month.</p>
+        <p className="text-gray-400 mb-4">Get IdeaToProgram Pro for your entire class or team. $5/student/month.</p>
         <p className="text-gray-500 text-sm mb-6">Includes all 210 lessons, progress tracking per student, and admin dashboard.</p>
         <a href="mailto:teams@codelearner.com" className="inline-block px-6 py-3 border border-[#334155] hover:border-indigo-500 rounded-xl font-medium transition">Contact Sales</a>
       </div>
