@@ -36,10 +36,10 @@ export default function PricingPage() {
   const hasSub = (plan: string) => user?.subscriptions?.some((s) => s.plan === plan) || false;
 
   const plans = [
-    { id: "pro_python", name: "Python Pro", desc: "100 Python lessons", monthly: 5, yearly: 50, yearlySave: 10, icon: "🐍", features: ["100 Python pro lessons", "Guided projects", "Certificates", "Everything in Free"] },
-    { id: "pro_javascript", name: "JavaScript Pro", desc: "100 JS lessons", monthly: 5, yearly: 50, yearlySave: 10, icon: "⚡", features: ["100 JavaScript pro lessons", "Guided projects", "Certificates", "Everything in Free"] },
-    { id: "pro_all", name: "Pro All", desc: "All 210 lessons", monthly: 10, yearly: 100, yearlySave: 20, icon: "🚀", featured: true, features: ["All 210 lessons", "Python + JavaScript", "All guided projects", "All certificates", "Everything in Free"] },
-    { id: "vibe_pro", name: "Vibe Pro", desc: "Unlimited AI coding", monthly: 20.99, yearly: 150, yearlySave: 101.88, icon: "🤖", features: ["Unlimited AI prompts", "Vibe Code Studio", "Build anything with AI", "Separate from lesson plans"] },
+    { id: "pro_python", name: "Python Pro", desc: "100 Python lessons", monthly: 5, yearly: 50, yearlySave: 10, icon: "🐍", features: ["100 Python pro lessons", "10 guided projects", "Completion certificate", "AI tutor on every lesson", "Everything in Free"] },
+    { id: "pro_javascript", name: "JavaScript Pro", desc: "100 JS lessons", monthly: 5, yearly: 50, yearlySave: 10, icon: "⚡", features: ["100 JavaScript pro lessons", "10 guided projects", "Completion certificate", "AI tutor on every lesson", "Everything in Free"] },
+    { id: "pro_all", name: "Pro All", desc: "All 210 lessons", monthly: 10, yearly: 100, yearlySave: 20, icon: "🚀", featured: true, features: ["All 210 lessons (Python + JS)", "20 guided projects", "All completion certificates", "Full AI Vibe Code access", "Priority AI tutor", "Everything in Free"] },
+    { id: "vibe_pro", name: "Vibe Pro", desc: "Unlimited AI coding", monthly: 20.99, yearly: 150, yearlySave: 101.88, icon: "🤖", features: ["Unlimited AI prompts", "Advanced AI (Claude Sonnet)", "Full production-quality code", "Games with scoring & menus", "Apps with CRUD & search", "8x more code output vs free", "Vibe Code Studio"] },
   ];
 
   return (
