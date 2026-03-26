@@ -856,34 +856,109 @@ function ensureGuidedProjects(db: Database.Database) {
 }
 
 // ----- Teams -----
-export function createTeam(ownerId: string, name: string, maxSeats: number): { id: string } {
+export function createTeam(ownerId: string, name: string, maxSeats: number): { id: string; joinCode: string } {
   const db = getDb();
   const id = crypto.randomUUID();
+  const joinCode = "SCHOOL-" + crypto.randomBytes(3).toString("hex").toUpperCase();
   db.prepare("INSERT INTO teams (id, name, owner_id, max_seats) VALUES (?, ?, ?, ?)").run(id, name, ownerId, maxSeats);
   db.prepare("INSERT INTO team_members (team_id, user_id, role) VALUES (?, ?, 'owner')").run(id, ownerId);
-  return { id };
+  // Store join code - add column if needed
+  try { db.exec("ALTER TABLE teams ADD COLUMN join_code TEXT NOT NULL DEFAULT ''"); } catch {}
+  try { db.exec("ALTER TABLE teams ADD COLUMN plan_type TEXT NOT NULL DEFAULT 'monthly'"); } catch {}
+  db.prepare("UPDATE teams SET join_code = ? WHERE id = ?").run(joinCode, id);
+  // Grant owner pro access
+  db.prepare("UPDATE users SET is_pro = 1 WHERE id = ?").run(ownerId);
+  return { id, joinCode };
 }
 
 export function addTeamMember(teamId: string, userId: string): boolean {
   const db = getDb();
-  const team = db.prepare("SELECT max_seats FROM teams WHERE id = ?").get(teamId) as { max_seats: number } | undefined;
+  const team = db.prepare("SELECT max_seats, plan_type FROM teams WHERE id = ?").get(teamId) as { max_seats: number; plan_type: string } | undefined;
   if (!team) return false;
   const count = (db.prepare("SELECT COUNT(*) as cnt FROM team_members WHERE team_id = ?").get(teamId) as { cnt: number }).cnt;
-  if (count >= team.max_seats) return false;
+  // Yearly unlimited = max_seats of 99999, monthly = capped
+  if (team.plan_type !== "yearly" && count >= team.max_seats) return false;
   try {
     db.prepare("INSERT INTO team_members (team_id, user_id) VALUES (?, ?)").run(teamId, userId);
-    // Grant pro access
     db.prepare("UPDATE users SET is_pro = 1 WHERE id = ?").run(userId);
     return true;
   } catch { return false; }
 }
 
-export function getTeam(teamId: string): { id: string; name: string; members: { userId: string; name: string; role: string }[] } | null {
+export function joinTeamByCode(joinCode: string, userId: string): { success: boolean; teamName?: string; error?: string } {
   const db = getDb();
-  const team = db.prepare("SELECT * FROM teams WHERE id = ?").get(teamId) as { id: string; name: string } | undefined;
+  try { db.exec("ALTER TABLE teams ADD COLUMN join_code TEXT NOT NULL DEFAULT ''"); } catch {}
+  const team = db.prepare("SELECT id, name, max_seats, plan_type FROM teams WHERE join_code = ?").get(joinCode.toUpperCase()) as {
+    id: string; name: string; max_seats: number; plan_type: string;
+  } | undefined;
+  if (!team) return { success: false, error: "Invalid school code" };
+
+  // Check if already a member
+  const existing = db.prepare("SELECT id FROM team_members WHERE team_id = ? AND user_id = ?").get(team.id, userId);
+  if (existing) return { success: false, error: "You're already in this school" };
+
+  // Check capacity
+  const count = (db.prepare("SELECT COUNT(*) as cnt FROM team_members WHERE team_id = ?").get(team.id) as { cnt: number }).cnt;
+  if (team.plan_type !== "yearly" && count >= team.max_seats) {
+    return { success: false, error: "This school has reached its student limit" };
+  }
+
+  db.prepare("INSERT INTO team_members (team_id, user_id, role) VALUES (?, ?, 'student')").run(team.id, userId);
+  db.prepare("UPDATE users SET is_pro = 1 WHERE id = ?").run(userId);
+  return { success: true, teamName: team.name };
+}
+
+export interface TeamDetail {
+  id: string;
+  name: string;
+  joinCode: string;
+  planType: string;
+  maxSeats: number;
+  members: { userId: string; name: string; email: string; role: string; xp: number; lessonsCompleted: number }[];
+}
+
+export function getTeam(teamId: string): TeamDetail | null {
+  const db = getDb();
+  try { db.exec("ALTER TABLE teams ADD COLUMN join_code TEXT NOT NULL DEFAULT ''"); } catch {}
+  try { db.exec("ALTER TABLE teams ADD COLUMN plan_type TEXT NOT NULL DEFAULT 'monthly'"); } catch {}
+  const team = db.prepare("SELECT * FROM teams WHERE id = ?").get(teamId) as {
+    id: string; name: string; join_code: string; plan_type: string; max_seats: number;
+  } | undefined;
   if (!team) return null;
-  const members = db.prepare("SELECT tm.user_id, u.name, tm.role FROM team_members tm JOIN users u ON tm.user_id = u.id WHERE tm.team_id = ?").all(teamId) as { user_id: string; name: string; role: string }[];
-  return { id: team.id, name: team.name, members: members.map((m) => ({ userId: m.user_id, name: m.name, role: m.role })) };
+
+  const members = db.prepare(`
+    SELECT tm.user_id, u.name, u.email, tm.role,
+      COALESCE(SUM(p.xp_earned), 0) as xp,
+      COUNT(CASE WHEN p.completed = 1 THEN 1 END) as lessons_done
+    FROM team_members tm
+    JOIN users u ON tm.user_id = u.id
+    LEFT JOIN progress p ON tm.user_id = p.user_id
+    WHERE tm.team_id = ?
+    GROUP BY tm.user_id
+  `).all(teamId) as { user_id: string; name: string; email: string; role: string; xp: number; lessons_done: number }[];
+
+  return {
+    id: team.id,
+    name: team.name,
+    joinCode: team.join_code || "",
+    planType: team.plan_type || "monthly",
+    maxSeats: team.max_seats,
+    members: members.map((m) => ({ userId: m.user_id, name: m.name, email: m.email, role: m.role, xp: m.xp, lessonsCompleted: m.lessons_done })),
+  };
+}
+
+export function getTeamByOwner(ownerId: string): TeamDetail | null {
+  const db = getDb();
+  try { db.exec("ALTER TABLE teams ADD COLUMN join_code TEXT NOT NULL DEFAULT ''"); } catch {}
+  const team = db.prepare("SELECT id FROM teams WHERE owner_id = ?").get(ownerId) as { id: string } | undefined;
+  if (!team) return null;
+  return getTeam(team.id);
+}
+
+export function setTeamPlanType(teamId: string, planType: string, maxSeats: number): void {
+  const db = getDb();
+  try { db.exec("ALTER TABLE teams ADD COLUMN plan_type TEXT NOT NULL DEFAULT 'monthly'"); } catch {}
+  db.prepare("UPDATE teams SET plan_type = ?, max_seats = ? WHERE id = ?").run(planType, maxSeats, teamId);
 }
 
 // ----- Password Reset -----
