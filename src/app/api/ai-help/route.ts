@@ -15,7 +15,28 @@ export async function POST(req: NextRequest) {
       const client = new Anthropic();
 
       const systemPrompt =
-        `You are a friendly coding tutor on IdeaToProgram. Help the student understand concepts, debug code, and solve challenges. Don't give away answers directly - guide them to figure it out. Keep responses concise (under 200 words). The student is working on: ${lessonTitle || "a coding lesson"}. Language: ${language || "python"}.`;
+        `You are a friendly AI assistant on IdeaToProgram, a coding education platform. You help with TWO things:
+
+1. CODING HELP: Help students understand concepts, debug code, and solve challenges. Don't give away answers directly - guide them. The student is working on: ${lessonTitle || "a coding lesson"}. Language: ${language || "python"}.
+
+2. PLATFORM GUIDE: Help users navigate the platform. Here's what you know about IdeaToProgram:
+- SIGNING UP: Go to /signup, enter name, email, password. Or use "Continue with Google/GitHub" on the login page.
+- LOGGING IN: Go to /login. Forgot password? Click "Forgot password?" link on the login page.
+- FREE PLAN: 20 free lessons (10 Python + 10 JavaScript), 10 AI prompts in Vibe Code, XP system, daily challenges.
+- PRO ALL ($10/mo or $100/yr): All 220 core lessons, 20 guided projects, certificates, AI tutor, + 2 FREE specialization path picks.
+- PYTHON PRO or JS PRO ($5/mo): Just that language's 100 lessons.
+- VIBE PRO ($20.99/mo or $150/yr): Unlimited AI in Vibe Code Studio. Pro users get advanced AI (Claude Sonnet) that generates full production code. Free users get basic code only.
+- SPECIALIZATION PATHS ($5/mo each or $300/yr all): Web Designer, AI & ML, Game Dev, Data Engineer, Mobile Dev. 100 lessons each + capstone project + professional certificate. Available in Python & JavaScript.
+- SCHOOL PLAN ($1/student/mo or $1500/yr unlimited): Teacher gets a join code, students enter it at /school/join to get Pro access.
+- COMPLETING 100 LESSONS: Unlocks 2 free specialization picks (or get Pro plan for the same benefit).
+- DAILY CHALLENGES: New coding challenge every day at /daily for +25 XP.
+- REFERRALS: Share your code at /referral. Both people get 5 bonus AI prompts.
+- LEADERBOARD: See top learners at /leaderboard.
+- PROFILE: View stats, badges, streak at /profile. Change name and theme there.
+- CERTIFICATES: Earn completion certificates at /certificate.
+- VIBE CODE STUDIO: At /vibe. Create projects, describe what you want, AI writes code. Run it in the browser.
+
+Keep responses concise (under 200 words). Be helpful and friendly.`;
 
       let userMessage = question;
       if (code) {
@@ -164,11 +185,47 @@ function generateAIResponse(
       `\n\nWhich part of the syntax would you like me to explain more?`;
   }
 
+  // Platform questions
+  if (q.includes("sign up") || q.includes("signup") || q.includes("create account") || q.includes("register")) {
+    return `To sign up:\n1. Go to the **Sign Up** page (top right button)\n2. Enter your name, email, and password\n3. Or click **"Continue with Google"** or **"Continue with GitHub"** for instant signup\n4. Choose your learning path (Python, JavaScript, or Both)\n\nIt's free to start — you get 20 lessons, 10 AI prompts, and XP tracking!`;
+  }
+  if (q.includes("sign in") || q.includes("signin") || q.includes("log in") || q.includes("login") || q.includes("can't login") || q.includes("cant login")) {
+    return `To log in:\n1. Go to the **Log In** page\n2. Enter your email and password\n3. Or use **"Continue with Google/GitHub"**\n\n**Forgot your password?** Click the "Forgot password?" link on the login page to reset it.\n\n**Still having trouble?** Make sure you're using the same email you signed up with.`;
+  }
+  if (q.includes("pro") || q.includes("upgrade") || q.includes("premium") || q.includes("subscription") || q.includes("pricing") || q.includes("price") || q.includes("cost") || q.includes("pay")) {
+    return `**IdeaToProgram Plans:**\n\n` +
+      `🆓 **Free:** 20 lessons, 10 AI prompts, XP system\n` +
+      `🐍 **Python Pro ($5/mo):** 100 Python lessons\n` +
+      `⚡ **JS Pro ($5/mo):** 100 JavaScript lessons\n` +
+      `🚀 **Pro All ($10/mo or $100/yr):** All 220 core lessons + 2 FREE specialization picks\n` +
+      `🤖 **Vibe Pro ($20.99/mo):** Unlimited AI coding with advanced model\n` +
+      `🎨 **Specializations ($5/mo each or $300/yr all):** Web Design, AI, Game Dev, Data, Mobile — 100 lessons each\n` +
+      `🏫 **School ($1/student/mo):** Classroom access\n\n` +
+      `Visit **/pricing** to subscribe!`;
+  }
+  if (q.includes("vibe") || q.includes("ai cod") || q.includes("build me") || q.includes("vibe code")) {
+    return `**Vibe Code Studio** lets you describe what you want and AI writes the code!\n\n` +
+      `1. Go to **/vibe** and create a project\n2. Tell the AI what to build ("make a calculator")\n3. AI writes the code, you click Run\n4. Ask for changes ("add history feature")\n\n` +
+      `**Free:** 10 AI prompts, basic code\n**Vibe Pro ($20.99/mo):** Unlimited prompts, advanced AI, full production code`;
+  }
+  if (q.includes("specializ") || q.includes("path") || q.includes("web design") || q.includes("game dev") || q.includes("mobile") || q.includes("data engineer") || q.includes("certificate")) {
+    return `**Specialization Paths** — 100 lessons each + capstone + certificate:\n\n` +
+      `🎨 Web Designer\n🤖 AI & Machine Learning\n🎮 Game Developer\n📊 Data Engineer\n📱 Mobile App Developer\n\n` +
+      `**How to get them:**\n- $5/mo for one path\n- $300/yr for all 5\n- Complete 100 core lessons OR get Pro → pick 2 paths FREE!\n\nVisit **/paths** to explore!`;
+  }
+  if (q.includes("school") || q.includes("teacher") || q.includes("classroom") || q.includes("student")) {
+    return `**School Plan:**\n- $1/student/month (min 5 students)\n- $1,500/year for unlimited students\n\n` +
+      `**Teacher:** Go to **/school**, create a school, get a join code\n**Students:** Go to **/school/join**, enter the code → instant Pro access\n\nTeacher dashboard shows all student progress, XP, and lessons completed.`;
+  }
+  if (q.includes("streak") || q.includes("xp") || q.includes("level") || q.includes("badge") || q.includes("achievement")) {
+    return `**XP & Gamification:**\n- Earn XP for every lesson completed\n- Level up every 100 XP\n- Daily challenges give +25 XP\n- 16 achievements/badges to earn\n- Coding streaks tracked daily\n\nSee your stats at **/profile** and compete on **/leaderboard**!`;
+  }
+  if (q.includes("referral") || q.includes("invite") || q.includes("friend")) {
+    return `**Referral Program:**\n1. Go to **/referral** to get your unique code\n2. Share it with friends\n3. When they sign up with your code, you BOTH get **5 bonus AI prompts**!\n\nThe more friends you invite, the more free prompts you earn.`;
+  }
+
   // Default helpful response
-  return `I'm your AI coding tutor! Here's how I can help:\n\n` +
-    `- **Explain concepts** - ask "what is a variable?" or "explain loops"\n` +
-    `- **Debug your code** - paste your code and describe the problem\n` +
-    `- **Help with challenges** - tell me where you're stuck\n` +
-    `- **Syntax help** - ask "how to write a function in ${lang}"\n\n` +
-    `I won't give you the answer directly (that's what the Answer Key is for!), but I'll guide you to figure it out yourself. What do you need help with?`;
+  return `I'm your AI helper! I can help with:\n\n` +
+    `**Coding:**\n- Explain concepts ("what is a variable?")\n- Debug your code\n- Help with challenges\n\n` +
+    `**Platform:**\n- How to sign up/log in\n- Pricing and plans\n- Specialization paths\n- Vibe Code Studio\n- School/classroom setup\n- XP, streaks, and badges\n\nWhat do you need help with?`;
 }

@@ -16,7 +16,7 @@ interface Message {
 export default function AIChat({ lessonTitle, language, code, challengePrompt }: AIChatProps) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: "ai", text: `Hi! I'm your AI tutor. Ask me anything about **${lessonTitle}** — I'll help you understand concepts, debug your code, or guide you through the challenge. What do you need help with?` },
+    { role: "ai", text: `Hi! I'm your AI helper. I can help with:\n\n• **Coding** — explain concepts, debug code, solve challenges\n• **Platform** — pricing, plans, how to sign up, Vibe Code, specializations\n\nWhat do you need help with?` },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -61,7 +61,9 @@ export default function AIChat({ lessonTitle, language, code, challengePrompt }:
     "I'm stuck on the challenge",
     "Explain the main concept",
     "My code has an error",
-    "Show me the syntax",
+    "What are the Pro benefits?",
+    "How does Vibe Code work?",
+    "Tell me about specializations",
   ];
 
   return (
@@ -98,7 +100,7 @@ export default function AIChat({ lessonTitle, language, code, challengePrompt }:
               <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-xs font-bold">AI</div>
               <div>
                 <div className="font-bold text-sm">AI Helper</div>
-                <div className="text-xs text-gray-400">Ask me anything about this lesson</div>
+                <div className="text-xs text-gray-400">Coding help &amp; platform guide</div>
               </div>
             </div>
           </div>
