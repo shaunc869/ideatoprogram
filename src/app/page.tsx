@@ -19,14 +19,14 @@ export default function Home() {
             </span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Master Python and JavaScript with <strong className="text-white">310+ hands-on lessons</strong>, a built-in code editor, and an AI tutor that helps you every step of the way.
+            Master Python and JavaScript with <strong className="text-white">760+ hands-on lessons</strong>, a built-in code editor, and an AI tutor that helps you every step of the way.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link href="/signup" className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-bold text-lg transition shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40">
               Start Learning Free &#8594;
             </Link>
             <Link href="/lessons" className="px-8 py-4 border border-[#334155] hover:border-indigo-500 rounded-xl font-bold text-lg transition bg-[#1e293b]/50 backdrop-blur">
-              Browse 310+ Lessons
+              Browse 760+ Lessons
             </Link>
           </div>
           <p className="text-sm text-gray-500">No credit card required. 10 lessons completely free.</p>
@@ -82,7 +82,7 @@ export default function Home() {
             </div>
             <div className="bg-[#1e293b] border border-[#334155] rounded-2xl p-8 hover:border-indigo-500/50 transition group">
               <div className="w-14 h-14 bg-yellow-600/20 rounded-xl flex items-center justify-center text-2xl mb-5 group-hover:bg-yellow-600/30 transition">&#128218;</div>
-              <h3 className="text-xl font-bold mb-3">310+ Hands-On Lessons</h3>
+              <h3 className="text-xl font-bold mb-3">760+ Hands-On Lessons</h3>
               <p className="text-gray-400 leading-relaxed">From &quot;Hello World&quot; to building full-stack apps. Every lesson has reading material, code examples, and a coding challenge.</p>
             </div>
             <div className="bg-[#1e293b] border border-[#334155] rounded-2xl p-8 hover:border-indigo-500/50 transition group">
@@ -103,7 +103,7 @@ export default function Home() {
       <section className="py-16 px-4 border-t border-b border-[#334155] bg-[#1e293b]/30">
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div>
-            <div className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">310+</div>
+            <div className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">760+</div>
             <div className="text-gray-400 mt-2">Lessons</div>
           </div>
           <div>

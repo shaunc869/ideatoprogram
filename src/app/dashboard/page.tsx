@@ -75,10 +75,10 @@ export default function DashboardPage() {
           {user.isPro ? (
             <span className="inline-flex items-center gap-2">
               <span className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-bold px-2 py-1 rounded-full">PRO</span>
-              You have access to all 310 lessons
+              You have access to all 760+ lessons
             </span>
           ) : (
-            <span>You have access to 10 free lessons. <Link href="/upgrade" className="text-indigo-400 hover:underline">Upgrade to Pro</Link> for all 310.</span>
+            <span>You have access to 10 free lessons. <Link href="/upgrade" className="text-indigo-400 hover:underline">Upgrade to Pro</Link> for all 760+.</span>
           )}
         </p>
       </div>
@@ -214,7 +214,7 @@ export default function DashboardPage() {
 
       {!user.isPro && (
         <div className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border border-indigo-500 rounded-xl p-6 text-center">
-          <h3 className="text-xl font-bold mb-2">Unlock All 310 Lessons</h3>
+          <h3 className="text-xl font-bold mb-2">Unlock All 760+ Lessons</h3>
           <p className="text-gray-300 mb-4">Get lifetime access to 100 Python + 100 JavaScript pro lessons for just $10</p>
           <Link href="/upgrade" className="inline-block px-6 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-semibold transition">
             Upgrade to Pro - $10

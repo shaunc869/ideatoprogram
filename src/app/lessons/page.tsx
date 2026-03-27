@@ -115,7 +115,7 @@ function LessonsContent() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold">All Lessons</h1>
-          <p className="text-gray-400 text-sm mt-1">310+ lessons &bull; Python &bull; JavaScript</p>
+          <p className="text-gray-400 text-sm mt-1">760+ lessons &bull; Python &bull; JavaScript</p>
         </div>
         {progress && (
           <div className="flex items-center gap-2 bg-[#1e293b] border border-[#334155] rounded-lg px-4 py-2">

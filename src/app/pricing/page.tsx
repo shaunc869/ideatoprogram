@@ -38,7 +38,7 @@ export default function PricingPage() {
   const plans = [
     { id: "pro_python", name: "Python Pro", desc: "100 Python lessons", monthly: 5, yearly: 50, yearlySave: 10, icon: "🐍", features: ["100 Python pro lessons", "10 guided projects", "Completion certificate", "AI tutor on every lesson", "Everything in Free"] },
     { id: "pro_javascript", name: "JavaScript Pro", desc: "100 JS lessons", monthly: 5, yearly: 50, yearlySave: 10, icon: "⚡", features: ["100 JavaScript pro lessons", "10 guided projects", "Completion certificate", "AI tutor on every lesson", "Everything in Free"] },
-    { id: "pro_all", name: "Pro All", desc: "All 310 lessons", monthly: 10, yearly: 100, yearlySave: 20, icon: "🚀", featured: true, features: ["All 310 lessons (Python + JS)", "20 guided projects", "All completion certificates", "Full AI Vibe Code access", "Priority AI tutor", "Everything in Free"] },
+    { id: "pro_all", name: "Pro All", desc: "All 760+ lessons", monthly: 10, yearly: 100, yearlySave: 20, icon: "🚀", featured: true, features: ["All 760+ lessons (Python + JS)", "20 guided projects", "All completion certificates", "Full AI Vibe Code access", "Priority AI tutor", "Everything in Free"] },
     { id: "vibe_pro", name: "Vibe Pro", desc: "Unlimited AI coding", monthly: 20.99, yearly: 150, yearlySave: 101.88, icon: "🤖", features: ["Unlimited AI prompts", "Advanced AI (Claude Sonnet)", "Full production-quality code", "Games with scoring & menus", "Apps with CRUD & search", "8x more code output vs free", "Vibe Code Studio"] },
   ];
 
@@ -127,6 +127,53 @@ export default function PricingPage() {
         })}
       </div>
 
+      {/* Specialization Paths */}
+      <div className="mb-16">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold mb-2">Specialization Paths</h2>
+          <p className="text-gray-400">100 lessons each. Choose one for $5/mo, or get all 5 for $300/yr.</p>
+        </div>
+        <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+          {[
+            { id: "spec_web_designer", name: "Web Designer", icon: "🎨" },
+            { id: "spec_ai_ml", name: "AI & ML", icon: "🤖" },
+            { id: "spec_game_dev", name: "Game Dev", icon: "🎮" },
+            { id: "spec_data_engineer", name: "Data Engineer", icon: "📊" },
+            { id: "spec_mobile_dev", name: "Mobile Dev", icon: "📱" },
+          ].map((spec) => (
+            <div key={spec.id} className={`bg-[#1e293b] border rounded-xl p-5 text-center ${
+              hasSub(spec.id) ? "border-green-500/30" : "border-[#334155]"
+            }`}>
+              <div className="text-2xl mb-2">{spec.icon}</div>
+              <h3 className="font-bold text-sm mb-1">{spec.name}</h3>
+              <div className="text-lg font-extrabold mb-1">$5<span className="text-xs font-normal text-gray-400">/mo</span></div>
+              <p className="text-xs text-gray-500 mb-3">100 lessons + capstone</p>
+              {hasSub(spec.id) ? (
+                <div className="py-1.5 text-center text-green-400 text-xs font-bold">✓ Active</div>
+              ) : (
+                <button onClick={() => handleSubscribe(spec.id)} disabled={loadingPlan === spec.id}
+                  className="w-full py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-xs font-bold transition disabled:opacity-50">
+                  {loadingPlan === spec.id ? "..." : "Subscribe"}
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="max-w-md mx-auto bg-gradient-to-r from-amber-600/10 to-orange-600/10 border border-amber-500/30 rounded-xl p-6 text-center">
+          <div className="text-sm font-bold text-amber-400 mb-1">ALL 5 SPECIALIZATIONS</div>
+          <div className="text-3xl font-extrabold mb-1">$300<span className="text-sm font-normal text-gray-400">/yr</span></div>
+          <p className="text-xs text-gray-400 mb-3">500 lessons + 5 capstone projects + 5 certificates. Save $100 vs monthly.</p>
+          {hasSub("spec_all") ? (
+            <div className="py-2 text-center text-green-400 font-bold text-sm">✓ Active</div>
+          ) : (
+            <button onClick={() => { setBilling("yearly"); handleSubscribe("spec_all"); }} disabled={loadingPlan === "spec_all"}
+              className="px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 rounded-lg font-bold text-sm transition disabled:opacity-50">
+              {loadingPlan === "spec_all" ? "Redirecting..." : "Get All Specializations - $300/yr"}
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* Secure payment note */}
       <div className="text-center mb-16">
         <p className="text-sm text-gray-500 flex items-center justify-center gap-2">
@@ -139,7 +186,7 @@ export default function PricingPage() {
         <div className="text-center mb-8">
           <div className="text-3xl mb-2">🏫</div>
           <h2 className="text-2xl font-bold mb-2">School &amp; Classroom Plan</h2>
-          <p className="text-gray-400">Give your entire class access to all 310 lessons, projects, and certificates.</p>
+          <p className="text-gray-400">Give your entire class access to all 760+ lessons, projects, and certificates.</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
@@ -176,7 +223,7 @@ export default function PricingPage() {
 
             <ul className="space-y-2 text-sm text-gray-300 mb-6">
               <li className="flex items-start gap-2"><span className="text-emerald-400">✓</span> Unlimited students</li>
-              <li className="flex items-start gap-2"><span className="text-emerald-400">✓</span> All 310 lessons</li>
+              <li className="flex items-start gap-2"><span className="text-emerald-400">✓</span> All 760+ lessons</li>
               <li className="flex items-start gap-2"><span className="text-emerald-400">✓</span> Progress tracking per student</li>
               <li className="flex items-start gap-2"><span className="text-emerald-400">✓</span> Admin dashboard</li>
               <li className="flex items-start gap-2"><span className="text-emerald-400">✓</span> Certificates for each student</li>

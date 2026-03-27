@@ -6,51 +6,29 @@ import { SPECIALIZATION_PATHS, ADVANCED_PYTHON, ADVANCED_JS } from "@/lib/paths"
 interface Progress { completedLessons: string[]; }
 
 export default function PathsPage() {
-  const [progress, setProgress] = useState<Progress | null>(null);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [, setProgress] = useState<Progress | null>(null);
 
   useEffect(() => {
-    fetch("/api/auth/me").then((r) => r.json()).then((d) => { if (!d.error) setLoggedIn(true); }).catch(() => {});
     fetch("/api/progress").then((r) => r.json()).then((d) => { if (d.progress) setProgress(d.progress); }).catch(() => {});
   }, []);
-
-  const pythonDone = progress?.completedLessons.filter((id) => id.startsWith("python-")).length ?? 0;
-  const jsDone = progress?.completedLessons.filter((id) => id.startsWith("js-")).length ?? 0;
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-12">
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-extrabold mb-4">Specialization Paths</h1>
         <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-          Finished your 100 lessons? Choose a specialization, master it, earn a certificate, and build a capstone project.
+          Choose a specialization path. 100 lessons each, with a capstone project and professional certificate.
         </p>
+        <p className="text-gray-500 text-sm mt-2">$5/mo per path, or $300/yr for all 5</p>
       </div>
-
-      {/* Progress check */}
-      {loggedIn && (pythonDone < 100 && jsDone < 100) && (
-        <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-5 mb-8 text-center">
-          <p className="text-yellow-400 font-medium">Complete 100 pro lessons to unlock specialization paths</p>
-          <p className="text-sm text-gray-400 mt-1">Python: {pythonDone}/100 &bull; JavaScript: {jsDone}/100</p>
-          <Link href="/lessons" className="inline-block mt-3 text-sm text-indigo-400 hover:underline">Continue lessons &rarr;</Link>
-        </div>
-      )}
 
       {/* Path Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-        {SPECIALIZATION_PATHS.map((path) => {
-          const isUnlocked = path.language === "python" ? pythonDone >= 100 : jsDone >= 100;
-          return (
-            <Link key={path.id} href={isUnlocked || !loggedIn ? `/paths/${path.id}` : "#"}
-              className={`bg-[#1e293b] border rounded-2xl p-6 transition group ${
-                isUnlocked ? "border-[#334155] hover:border-indigo-500" : "border-[#334155]/50 opacity-60"
-              }`}>
+        {SPECIALIZATION_PATHS.map((path) => (
+            <Link key={path.id} href={`/paths/${path.id}`}
+              className="bg-[#1e293b] border border-[#334155] hover:border-indigo-500 rounded-2xl p-6 transition group">
               <div className="flex items-center justify-between mb-4">
                 <div className="text-3xl">{path.icon}</div>
-                {isUnlocked ? (
-                  <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full font-bold">UNLOCKED</span>
-                ) : (
-                  <span className="text-xs bg-gray-700 text-gray-400 px-2 py-1 rounded-full">LOCKED</span>
-                )}
               </div>
               <h3 className="text-xl font-bold mb-1 group-hover:text-indigo-400 transition">{path.name}</h3>
               <p className="text-gray-400 text-sm mb-3">{path.description}</p>
@@ -65,8 +43,7 @@ export default function PathsPage() {
                 Certificate: {path.certificateName}
               </div>
             </Link>
-          );
-        })}
+        ))}
       </div>
 
       {/* Advanced Lessons */}
@@ -104,9 +81,9 @@ export default function PathsPage() {
         <h3 className="text-2xl font-bold mb-2">Total Learning Content</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
           <div><div className="text-3xl font-extrabold text-indigo-400">220</div><div className="text-sm text-gray-400">Core Lessons</div></div>
-          <div><div className="text-3xl font-extrabold text-pink-400">50</div><div className="text-sm text-gray-400">Path Lessons</div></div>
-          <div><div className="text-3xl font-extrabold text-yellow-400">40</div><div className="text-sm text-gray-400">Advanced Lessons</div></div>
-          <div><div className="text-3xl font-extrabold text-green-400">310</div><div className="text-sm text-gray-400">Total</div></div>
+          <div><div className="text-3xl font-extrabold text-pink-400">500</div><div className="text-sm text-gray-400">Specialization</div></div>
+          <div><div className="text-3xl font-extrabold text-yellow-400">40</div><div className="text-sm text-gray-400">Advanced</div></div>
+          <div><div className="text-3xl font-extrabold text-green-400">760</div><div className="text-sm text-gray-400">Total</div></div>
         </div>
       </div>
     </div>
