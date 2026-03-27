@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import ThemeProvider from "@/components/ThemeProvider";
+import GlobalAIChat from "@/components/GlobalAIChat";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navbar />
         <ThemeProvider>
           <main>{children}</main>
+          <GlobalAIChat />
         </ThemeProvider>
       </body>
     </html>
