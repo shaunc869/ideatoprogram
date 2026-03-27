@@ -1071,6 +1071,92 @@ export function getAdminStats(): {
   return { totalUsers, proUsers, vibeUsers, totalLessonsCompleted, totalXp, activeToday, revenue, topLessons: topLessons.map((r) => ({ lessonId: r.lesson_id, count: r.cnt })) };
 }
 
+// ----- Promo Codes -----
+export function createPromoCode(code: string, planType: string, maxUses: number, note: string): boolean {
+  const db = getDb();
+  try { db.exec("CREATE TABLE IF NOT EXISTS promo_codes (id INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT NOT NULL UNIQUE, plan_type TEXT NOT NULL, max_uses INTEGER NOT NULL DEFAULT 0, uses INTEGER NOT NULL DEFAULT 0, note TEXT NOT NULL DEFAULT '', active INTEGER NOT NULL DEFAULT 1, created_at TEXT NOT NULL DEFAULT (datetime('now')))"); } catch {}
+  try {
+    db.prepare("INSERT INTO promo_codes (code, plan_type, max_uses, note) VALUES (?, ?, ?, ?)").run(code.toUpperCase(), planType, maxUses, note);
+    return true;
+  } catch { return false; }
+}
+
+export function redeemPromoCode(userId: string, code: string): { success: boolean; error?: string; plan?: string } {
+  const db = getDb();
+  try { db.exec("CREATE TABLE IF NOT EXISTS promo_codes (id INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT NOT NULL UNIQUE, plan_type TEXT NOT NULL, max_uses INTEGER NOT NULL DEFAULT 0, uses INTEGER NOT NULL DEFAULT 0, note TEXT NOT NULL DEFAULT '', active INTEGER NOT NULL DEFAULT 1, created_at TEXT NOT NULL DEFAULT (datetime('now')))"); } catch {}
+  try { db.exec("CREATE TABLE IF NOT EXISTS promo_redemptions (id INTEGER PRIMARY KEY AUTOINCREMENT, promo_code TEXT NOT NULL, user_id TEXT NOT NULL, redeemed_at TEXT NOT NULL DEFAULT (datetime('now')), UNIQUE(promo_code, user_id))"); } catch {}
+
+  const promo = db.prepare("SELECT * FROM promo_codes WHERE code = ? AND active = 1").get(code.toUpperCase()) as {
+    code: string; plan_type: string; max_uses: number; uses: number;
+  } | undefined;
+  if (!promo) return { success: false, error: "Invalid or expired promo code" };
+  if (promo.max_uses > 0 && promo.uses >= promo.max_uses) return { success: false, error: "This promo code has reached its limit" };
+
+  // Check if already redeemed
+  const existing = db.prepare("SELECT id FROM promo_redemptions WHERE promo_code = ? AND user_id = ?").get(code.toUpperCase(), userId);
+  if (existing) return { success: false, error: "You've already used this promo code" };
+
+  // Apply the plan
+  const planType = promo.plan_type;
+  if (planType === "pro_all" || planType === "full_access") {
+    db.prepare("UPDATE users SET is_pro = 1 WHERE id = ?").run(userId);
+    // Also give a long subscription
+    const expiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
+    const existing_sub = db.prepare("SELECT id FROM subscriptions WHERE user_id = ? AND plan = 'pro_all'").get(userId);
+    if (existing_sub) {
+      db.prepare("UPDATE subscriptions SET expires_at = ?, active = 1 WHERE user_id = ? AND plan = 'pro_all'").run(expiresAt, userId);
+    } else {
+      db.prepare("INSERT INTO subscriptions (user_id, plan, billing, price_cents, expires_at) VALUES (?, 'pro_all', 'promo', 0, ?)").run(userId, expiresAt);
+    }
+  }
+  if (planType === "vibe_pro" || planType === "full_access") {
+    db.prepare("UPDATE users SET is_vibe_unlimited = 1 WHERE id = ?").run(userId);
+  }
+  if (planType === "full_access") {
+    // Give all specializations too
+    const picks = getFreeSpecPicks(userId);
+    if (picks.length < 5) {
+      db.prepare("UPDATE users SET free_spec_picks = 'web-designer,ai-ml,game-dev,data-engineer,mobile-dev' WHERE id = ?").run(userId);
+    }
+  }
+
+  // Record redemption and increment uses
+  db.prepare("INSERT INTO promo_redemptions (promo_code, user_id) VALUES (?, ?)").run(code.toUpperCase(), userId);
+  db.prepare("UPDATE promo_codes SET uses = uses + 1 WHERE code = ?").run(code.toUpperCase());
+
+  return { success: true, plan: planType };
+}
+
+export function getPromoCodes(): { code: string; planType: string; maxUses: number; uses: number; note: string; active: boolean }[] {
+  const db = getDb();
+  try { db.exec("CREATE TABLE IF NOT EXISTS promo_codes (id INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT NOT NULL UNIQUE, plan_type TEXT NOT NULL, max_uses INTEGER NOT NULL DEFAULT 0, uses INTEGER NOT NULL DEFAULT 0, note TEXT NOT NULL DEFAULT '', active INTEGER NOT NULL DEFAULT 1, created_at TEXT NOT NULL DEFAULT (datetime('now')))"); } catch {}
+  const rows = db.prepare("SELECT code, plan_type, max_uses, uses, note, active FROM promo_codes ORDER BY created_at DESC").all() as {
+    code: string; plan_type: string; max_uses: number; uses: number; note: string; active: number;
+  }[];
+  return rows.map((r) => ({ code: r.code, planType: r.plan_type, maxUses: r.max_uses, uses: r.uses, note: r.note, active: !!r.active }));
+}
+
+export function grantFullAccess(userId: string): boolean {
+  const db = getDb();
+  db.prepare("UPDATE users SET is_pro = 1, is_vibe_unlimited = 1 WHERE id = ?").run(userId);
+  const expiresAt = new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000).toISOString(); // 10 years
+  const existing = db.prepare("SELECT id FROM subscriptions WHERE user_id = ? AND plan = 'pro_all'").get(userId);
+  if (existing) {
+    db.prepare("UPDATE subscriptions SET expires_at = ?, active = 1, billing = 'gifted' WHERE user_id = ? AND plan = 'pro_all'").run(expiresAt, userId);
+  } else {
+    db.prepare("INSERT INTO subscriptions (user_id, plan, billing, price_cents, expires_at) VALUES (?, 'pro_all', 'gifted', 0, ?)").run(userId, expiresAt);
+  }
+  db.prepare("UPDATE users SET free_spec_picks = 'web-designer,ai-ml,game-dev,data-engineer,mobile-dev' WHERE id = ?").run(userId);
+  return true;
+}
+
+export function grantFullAccessByEmail(email: string): boolean {
+  const db = getDb();
+  const user = db.prepare("SELECT id FROM users WHERE email = ?").get(email) as { id: string } | undefined;
+  if (!user) return false;
+  return grantFullAccess(user.id);
+}
+
 // ----- Free Specialization Picks -----
 export function getFreeSpecPicks(userId: string): string[] {
   const db = getDb();
