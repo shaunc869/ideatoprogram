@@ -132,27 +132,27 @@ export default function Home() {
             <Link href="/paths/web-designer" className="bg-[#1e293b] border border-[#334155] hover:border-pink-500/50 rounded-xl p-5 text-center transition group">
               <div className="text-3xl mb-2">&#127912;</div>
               <h3 className="font-bold group-hover:text-pink-400 transition">Web Designer</h3>
-              <p className="text-xs text-gray-500 mt-1">10 lessons + capstone</p>
+              <p className="text-xs text-gray-500 mt-1">100 lessons + capstone</p>
             </Link>
             <Link href="/paths/ai-ml" className="bg-[#1e293b] border border-[#334155] hover:border-purple-500/50 rounded-xl p-5 text-center transition group">
               <div className="text-3xl mb-2">&#129302;</div>
               <h3 className="font-bold group-hover:text-purple-400 transition">AI &amp; ML</h3>
-              <p className="text-xs text-gray-500 mt-1">10 lessons + capstone</p>
+              <p className="text-xs text-gray-500 mt-1">100 lessons + capstone</p>
             </Link>
             <Link href="/paths/game-dev" className="bg-[#1e293b] border border-[#334155] hover:border-green-500/50 rounded-xl p-5 text-center transition group">
               <div className="text-3xl mb-2">&#127918;</div>
               <h3 className="font-bold group-hover:text-green-400 transition">Game Dev</h3>
-              <p className="text-xs text-gray-500 mt-1">10 lessons + capstone</p>
+              <p className="text-xs text-gray-500 mt-1">100 lessons + capstone</p>
             </Link>
             <Link href="/paths/data-engineer" className="bg-[#1e293b] border border-[#334155] hover:border-blue-500/50 rounded-xl p-5 text-center transition group">
               <div className="text-3xl mb-2">&#128202;</div>
               <h3 className="font-bold group-hover:text-blue-400 transition">Data Engineer</h3>
-              <p className="text-xs text-gray-500 mt-1">10 lessons + capstone</p>
+              <p className="text-xs text-gray-500 mt-1">100 lessons + capstone</p>
             </Link>
             <Link href="/paths/mobile-dev" className="bg-[#1e293b] border border-[#334155] hover:border-cyan-500/50 rounded-xl p-5 text-center transition group">
               <div className="text-3xl mb-2">&#128241;</div>
               <h3 className="font-bold group-hover:text-cyan-400 transition">Mobile Dev</h3>
-              <p className="text-xs text-gray-500 mt-1">10 lessons + capstone</p>
+              <p className="text-xs text-gray-500 mt-1">100 lessons + capstone</p>
             </Link>
           </div>
           <div className="text-center mt-6">

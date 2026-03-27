@@ -217,6 +217,7 @@ function initTables(db: Database.Database) {
   try { db.exec("ALTER TABLE users ADD COLUMN github_id TEXT"); } catch {}
   try { db.exec("ALTER TABLE users ADD COLUMN google_id TEXT"); } catch {}
   try { db.exec("ALTER TABLE users ADD COLUMN avatar_url TEXT NOT NULL DEFAULT ''"); } catch {}
+  try { db.exec("ALTER TABLE users ADD COLUMN free_spec_picks TEXT NOT NULL DEFAULT ''"); } catch {}
 }
 
 // ----- Password hashing with salt -----
@@ -1068,4 +1069,49 @@ export function getAdminStats(): {
   const revenue = (db.prepare("SELECT COALESCE(SUM(price_cents), 0) as total FROM subscriptions WHERE active = 1").get() as { total: number }).total;
   const topLessons = db.prepare("SELECT lesson_id, COUNT(*) as cnt FROM progress WHERE completed = 1 GROUP BY lesson_id ORDER BY cnt DESC LIMIT 10").all() as { lesson_id: string; cnt: number }[];
   return { totalUsers, proUsers, vibeUsers, totalLessonsCompleted, totalXp, activeToday, revenue, topLessons: topLessons.map((r) => ({ lessonId: r.lesson_id, count: r.cnt })) };
+}
+
+// ----- Free Specialization Picks -----
+export function getFreeSpecPicks(userId: string): string[] {
+  const db = getDb();
+  try { db.exec("ALTER TABLE users ADD COLUMN free_spec_picks TEXT NOT NULL DEFAULT ''"); } catch {}
+  const row = db.prepare("SELECT free_spec_picks FROM users WHERE id = ?").get(userId) as { free_spec_picks: string } | undefined;
+  if (!row || !row.free_spec_picks) return [];
+  return row.free_spec_picks.split(",").filter(Boolean);
+}
+
+export function addFreeSpecPick(userId: string, specId: string): boolean {
+  const db = getDb();
+  const current = getFreeSpecPicks(userId);
+  if (current.length >= 2) return false;
+  if (current.includes(specId)) return false;
+  const updated = [...current, specId].join(",");
+  db.prepare("UPDATE users SET free_spec_picks = ? WHERE id = ?").run(updated, userId);
+  return true;
+}
+
+export function canPickFreeSpec(userId: string): { eligible: boolean; picksRemaining: number; picks: string[] } {
+  const prog = getProgress(userId);
+  const pythonDone = prog.completedLessons.filter((id) => id.startsWith("python-")).length;
+  const jsDone = prog.completedLessons.filter((id) => id.startsWith("js-")).length;
+  const completed100 = pythonDone >= 100 || jsDone >= 100;
+
+  // Also eligible if Pro subscriber
+  const user = getUserById(userId);
+  const isPro = user?.isPro || user?.subscriptions?.some((s) => s.plan === "pro_all") || false;
+
+  const eligible = completed100 || isPro;
+  const picks = getFreeSpecPicks(userId);
+  return { eligible, picksRemaining: eligible ? Math.max(0, 2 - picks.length) : 0, picks };
+}
+
+export function hasSpecAccess(userId: string, specId: string): boolean {
+  const user = getUserById(userId);
+  if (!user) return false;
+  // Check if they have a subscription for this spec
+  if (user.subscriptions.some((s) => s.plan === `spec_${specId}` || s.plan === "spec_all")) return true;
+  // Check free picks
+  const picks = getFreeSpecPicks(userId);
+  if (picks.includes(specId)) return true;
+  return false;
 }

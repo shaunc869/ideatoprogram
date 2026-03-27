@@ -40,7 +40,7 @@ export default function PathDetailPage() {
           <span>&bull;</span>
           <span>1 capstone project</span>
           <span>&bull;</span>
-          <span>{path.language === "python" ? "🐍 Python" : "⚡ JavaScript"}</span>
+          <span>🐍 Python &amp; ⚡ JavaScript</span>
           <span>&bull;</span>
           <span className="text-indigo-400">{path.certificateName}</span>
         </div>
