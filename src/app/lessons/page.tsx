@@ -2,6 +2,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { SPECIALIZATION_PATHS, ADVANCED_PYTHON, ADVANCED_JS } from "@/lib/paths";
 
 interface Lesson {
   id: string;
@@ -48,6 +49,12 @@ function LessonsContent() {
   }, []);
 
   useEffect(() => {
+    if (tab === "paths" || tab === "advanced") {
+      // These tabs don't load from the lessons module
+      setAllLessonsByTab([]);
+      setLessons([]);
+      return;
+    }
     import("@/lib/lessons").then((mod) => {
       let list: Lesson[];
       if (tab === "free") list = mod.getFreeLessons();
@@ -87,6 +94,8 @@ function LessonsContent() {
     { id: "free-js", label: "Free JS", count: 10 },
     { id: "python", label: "Python Pro", count: 100 },
     { id: "javascript", label: "JS Pro", count: 100 },
+    { id: "paths", label: "Specializations", count: 50 },
+    { id: "advanced", label: "Advanced", count: 40 },
   ];
 
   const canAccess = (lesson: Lesson) => !lesson.isPro || user?.isPro;
@@ -106,7 +115,7 @@ function LessonsContent() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold">All Lessons</h1>
-          <p className="text-gray-400 text-sm mt-1">210 lessons &bull; Python &bull; JavaScript</p>
+          <p className="text-gray-400 text-sm mt-1">310+ lessons &bull; Python &bull; JavaScript</p>
         </div>
         {progress && (
           <div className="flex items-center gap-2 bg-[#1e293b] border border-[#334155] rounded-lg px-4 py-2">
@@ -207,6 +216,69 @@ function LessonsContent() {
           <div className="text-center py-12 text-gray-500">No lessons match your search.</div>
         )}
       </div>
+
+      {/* Specialization Paths Tab */}
+      {tab === "paths" && (
+        <div>
+          <p className="text-gray-400 mb-6">Complete 100 pro lessons to unlock a specialization. Each path has 10 lessons + a capstone project + a certificate.</p>
+          <div className="grid md:grid-cols-2 gap-4">
+            {SPECIALIZATION_PATHS.map((path) => (
+              <Link key={path.id} href={`/paths/${path.id}`}
+                className="bg-[#1e293b] border border-[#334155] hover:border-indigo-500 rounded-xl p-5 transition group">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-2xl">{path.icon}</span>
+                  <div>
+                    <h3 className="font-bold group-hover:text-indigo-400 transition">{path.name}</h3>
+                    <span className="text-xs text-gray-500">{path.language === "python" ? "🐍 Python" : "⚡ JavaScript"} &bull; {path.lessons.length} lessons</span>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-400 mb-2">{path.description}</p>
+                <div className="text-xs text-indigo-400">Capstone: {path.capstoneTitle} &bull; Certificate: {path.certificateName}</div>
+              </Link>
+            ))}
+          </div>
+          <div className="text-center mt-6">
+            <Link href="/paths" className="text-indigo-400 hover:underline text-sm">View all paths with full details &rarr;</Link>
+          </div>
+        </div>
+      )}
+
+      {/* Advanced Lessons Tab */}
+      {tab === "advanced" && (
+        <div>
+          <p className="text-gray-400 mb-6">High-skill lessons for experienced developers. Staff and principal engineer level content.</p>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">🐍 Advanced Python <span className="text-sm font-normal text-gray-400">({ADVANCED_PYTHON.length})</span></h3>
+              <div className="space-y-2">
+                {ADVANCED_PYTHON.map((lesson, i) => (
+                  <div key={lesson.id} className="flex items-center gap-3 p-3 bg-[#1e293b] border border-[#334155] rounded-lg">
+                    <div className="w-8 h-8 rounded-lg bg-yellow-600/20 flex items-center justify-center text-xs font-bold text-yellow-400">{i + 1}</div>
+                    <div>
+                      <div className="font-medium text-sm">{lesson.title}</div>
+                      <div className="text-xs text-gray-500">Advanced</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">⚡ Advanced JavaScript <span className="text-sm font-normal text-gray-400">({ADVANCED_JS.length})</span></h3>
+              <div className="space-y-2">
+                {ADVANCED_JS.map((lesson, i) => (
+                  <div key={lesson.id} className="flex items-center gap-3 p-3 bg-[#1e293b] border border-[#334155] rounded-lg">
+                    <div className="w-8 h-8 rounded-lg bg-blue-600/20 flex items-center justify-center text-xs font-bold text-blue-400">{i + 1}</div>
+                    <div>
+                      <div className="font-medium text-sm">{lesson.title}</div>
+                      <div className="text-xs text-gray-500">Advanced</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

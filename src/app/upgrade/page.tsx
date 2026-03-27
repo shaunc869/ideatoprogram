@@ -57,7 +57,7 @@ export default function UpgradePage() {
       <div className="max-w-md mx-auto px-4 py-20 text-center">
         <div className="text-6xl mb-6">&#127881;</div>
         <h1 className="text-3xl font-bold mb-4">You&apos;re a Pro!</h1>
-        <p className="text-gray-400 mb-8">You now have lifetime access to all 210 lessons including 100 Python and 100 JavaScript pro lessons.</p>
+        <p className="text-gray-400 mb-8">You now have lifetime access to all 310 lessons including 100 Python and 100 JavaScript pro lessons.</p>
         <div className="flex gap-4 justify-center">
           <a href="/lessons?tab=python" className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-semibold transition">Start Python</a>
           <a href="/lessons?tab=javascript" className="px-6 py-3 border border-[#334155] hover:border-indigo-500 rounded-lg font-semibold transition">Start JavaScript</a>

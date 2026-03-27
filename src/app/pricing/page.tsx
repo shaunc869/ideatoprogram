@@ -38,7 +38,7 @@ export default function PricingPage() {
   const plans = [
     { id: "pro_python", name: "Python Pro", desc: "100 Python lessons", monthly: 5, yearly: 50, yearlySave: 10, icon: "🐍", features: ["100 Python pro lessons", "10 guided projects", "Completion certificate", "AI tutor on every lesson", "Everything in Free"] },
     { id: "pro_javascript", name: "JavaScript Pro", desc: "100 JS lessons", monthly: 5, yearly: 50, yearlySave: 10, icon: "⚡", features: ["100 JavaScript pro lessons", "10 guided projects", "Completion certificate", "AI tutor on every lesson", "Everything in Free"] },
-    { id: "pro_all", name: "Pro All", desc: "All 210 lessons", monthly: 10, yearly: 100, yearlySave: 20, icon: "🚀", featured: true, features: ["All 210 lessons (Python + JS)", "20 guided projects", "All completion certificates", "Full AI Vibe Code access", "Priority AI tutor", "Everything in Free"] },
+    { id: "pro_all", name: "Pro All", desc: "All 310 lessons", monthly: 10, yearly: 100, yearlySave: 20, icon: "🚀", featured: true, features: ["All 310 lessons (Python + JS)", "20 guided projects", "All completion certificates", "Full AI Vibe Code access", "Priority AI tutor", "Everything in Free"] },
     { id: "vibe_pro", name: "Vibe Pro", desc: "Unlimited AI coding", monthly: 20.99, yearly: 150, yearlySave: 101.88, icon: "🤖", features: ["Unlimited AI prompts", "Advanced AI (Claude Sonnet)", "Full production-quality code", "Games with scoring & menus", "Apps with CRUD & search", "8x more code output vs free", "Vibe Code Studio"] },
   ];
 
@@ -139,7 +139,7 @@ export default function PricingPage() {
         <div className="text-center mb-8">
           <div className="text-3xl mb-2">🏫</div>
           <h2 className="text-2xl font-bold mb-2">School &amp; Classroom Plan</h2>
-          <p className="text-gray-400">Give your entire class access to all 210 lessons, projects, and certificates.</p>
+          <p className="text-gray-400">Give your entire class access to all 310 lessons, projects, and certificates.</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
@@ -176,7 +176,7 @@ export default function PricingPage() {
 
             <ul className="space-y-2 text-sm text-gray-300 mb-6">
               <li className="flex items-start gap-2"><span className="text-emerald-400">✓</span> Unlimited students</li>
-              <li className="flex items-start gap-2"><span className="text-emerald-400">✓</span> All 210 lessons</li>
+              <li className="flex items-start gap-2"><span className="text-emerald-400">✓</span> All 310 lessons</li>
               <li className="flex items-start gap-2"><span className="text-emerald-400">✓</span> Progress tracking per student</li>
               <li className="flex items-start gap-2"><span className="text-emerald-400">✓</span> Admin dashboard</li>
               <li className="flex items-start gap-2"><span className="text-emerald-400">✓</span> Certificates for each student</li>

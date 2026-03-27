@@ -278,7 +278,7 @@ export interface SubInfo {
 
 // Plan definitions
 export const PLANS = {
-  pro_all: { name: "Pro All (210 lessons)", monthly: 1000, yearly: 10000 },
+  pro_all: { name: "Pro All (310 lessons)", monthly: 1000, yearly: 10000 },
   pro_python: { name: "Pro Python (100 lessons)", monthly: 500, yearly: 5000 },
   pro_javascript: { name: "Pro JavaScript (100 lessons)", monthly: 500, yearly: 5000 },
   vibe_pro: { name: "Vibe Pro (Unlimited AI)", monthly: 1500, yearly: 15000 },

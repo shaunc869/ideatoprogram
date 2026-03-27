@@ -32,7 +32,7 @@ export default function JoinSchoolPage() {
       });
       const data = await res.json();
       if (data.success) {
-        setSuccess(`You've joined ${data.teamName}! You now have Pro access to all 210 lessons.`);
+        setSuccess(`You've joined ${data.teamName}! You now have Pro access to all 310 lessons.`);
       } else {
         setError(data.error || "Failed to join school");
       }

@@ -19,14 +19,14 @@ export default function Home() {
             </span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Master Python and JavaScript with <strong className="text-white">210+ hands-on lessons</strong>, a built-in code editor, and an AI tutor that helps you every step of the way.
+            Master Python and JavaScript with <strong className="text-white">310+ hands-on lessons</strong>, a built-in code editor, and an AI tutor that helps you every step of the way.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link href="/signup" className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-bold text-lg transition shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40">
               Start Learning Free &#8594;
             </Link>
             <Link href="/lessons" className="px-8 py-4 border border-[#334155] hover:border-indigo-500 rounded-xl font-bold text-lg transition bg-[#1e293b]/50 backdrop-blur">
-              Browse 210+ Lessons
+              Browse 310+ Lessons
             </Link>
           </div>
           <p className="text-sm text-gray-500">No credit card required. 10 lessons completely free.</p>
@@ -82,7 +82,7 @@ export default function Home() {
             </div>
             <div className="bg-[#1e293b] border border-[#334155] rounded-2xl p-8 hover:border-indigo-500/50 transition group">
               <div className="w-14 h-14 bg-yellow-600/20 rounded-xl flex items-center justify-center text-2xl mb-5 group-hover:bg-yellow-600/30 transition">&#128218;</div>
-              <h3 className="text-xl font-bold mb-3">210+ Hands-On Lessons</h3>
+              <h3 className="text-xl font-bold mb-3">310+ Hands-On Lessons</h3>
               <p className="text-gray-400 leading-relaxed">From &quot;Hello World&quot; to building full-stack apps. Every lesson has reading material, code examples, and a coding challenge.</p>
             </div>
             <div className="bg-[#1e293b] border border-[#334155] rounded-2xl p-8 hover:border-indigo-500/50 transition group">
@@ -103,7 +103,7 @@ export default function Home() {
       <section className="py-16 px-4 border-t border-b border-[#334155] bg-[#1e293b]/30">
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div>
-            <div className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">210+</div>
+            <div className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">310+</div>
             <div className="text-gray-400 mt-2">Lessons</div>
           </div>
           <div>
@@ -115,8 +115,49 @@ export default function Home() {
             <div className="text-gray-400 mt-2">Students</div>
           </div>
           <div>
-            <div className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-pink-400 to-red-400 bg-clip-text text-transparent">$10</div>
-            <div className="text-gray-400 mt-2">One-Time Price</div>
+            <div className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-pink-400 to-red-400 bg-clip-text text-transparent">5</div>
+            <div className="text-gray-400 mt-2">Specializations</div>
+          </div>
+        </div>
+      </section>
+
+      {/* Specialization Paths */}
+      <section className="py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Specialize &amp; Get Certified</h2>
+            <p className="text-gray-400 text-lg">After 100 lessons, choose a career path. Complete it. Earn a professional certificate.</p>
+          </div>
+          <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <Link href="/paths/web-designer" className="bg-[#1e293b] border border-[#334155] hover:border-pink-500/50 rounded-xl p-5 text-center transition group">
+              <div className="text-3xl mb-2">&#127912;</div>
+              <h3 className="font-bold group-hover:text-pink-400 transition">Web Designer</h3>
+              <p className="text-xs text-gray-500 mt-1">10 lessons + capstone</p>
+            </Link>
+            <Link href="/paths/ai-ml" className="bg-[#1e293b] border border-[#334155] hover:border-purple-500/50 rounded-xl p-5 text-center transition group">
+              <div className="text-3xl mb-2">&#129302;</div>
+              <h3 className="font-bold group-hover:text-purple-400 transition">AI &amp; ML</h3>
+              <p className="text-xs text-gray-500 mt-1">10 lessons + capstone</p>
+            </Link>
+            <Link href="/paths/game-dev" className="bg-[#1e293b] border border-[#334155] hover:border-green-500/50 rounded-xl p-5 text-center transition group">
+              <div className="text-3xl mb-2">&#127918;</div>
+              <h3 className="font-bold group-hover:text-green-400 transition">Game Dev</h3>
+              <p className="text-xs text-gray-500 mt-1">10 lessons + capstone</p>
+            </Link>
+            <Link href="/paths/data-engineer" className="bg-[#1e293b] border border-[#334155] hover:border-blue-500/50 rounded-xl p-5 text-center transition group">
+              <div className="text-3xl mb-2">&#128202;</div>
+              <h3 className="font-bold group-hover:text-blue-400 transition">Data Engineer</h3>
+              <p className="text-xs text-gray-500 mt-1">10 lessons + capstone</p>
+            </Link>
+            <Link href="/paths/mobile-dev" className="bg-[#1e293b] border border-[#334155] hover:border-cyan-500/50 rounded-xl p-5 text-center transition group">
+              <div className="text-3xl mb-2">&#128241;</div>
+              <h3 className="font-bold group-hover:text-cyan-400 transition">Mobile Dev</h3>
+              <p className="text-xs text-gray-500 mt-1">10 lessons + capstone</p>
+            </Link>
+          </div>
+          <div className="text-center mt-6">
+            <p className="text-sm text-gray-500">+ 40 advanced high-skill lessons for experienced developers</p>
+            <Link href="/paths" className="text-indigo-400 text-sm hover:underline mt-1 inline-block">Explore all paths &rarr;</Link>
           </div>
         </div>
       </section>

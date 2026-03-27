@@ -18,7 +18,7 @@ export const STRIPE_PLANS: Record<string, {
 }> = {
   pro_python: { name: "Python Pro - 100 Lessons", monthlyPrice: 500, yearlyPrice: 5000 },
   pro_javascript: { name: "JavaScript Pro - 100 Lessons", monthlyPrice: 500, yearlyPrice: 5000 },
-  pro_all: { name: "Pro All - 210 Lessons", monthlyPrice: 1000, yearlyPrice: 10000 },
+  pro_all: { name: "Pro All - 310 Lessons", monthlyPrice: 1000, yearlyPrice: 10000 },
   vibe_pro: { name: "Vibe Pro - Unlimited AI", monthlyPrice: 2099, yearlyPrice: 15000 },
   school: { name: "School Plan", monthlyPrice: 100, yearlyPrice: 150000 },
 };

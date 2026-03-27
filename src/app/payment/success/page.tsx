@@ -21,7 +21,7 @@ function SuccessContent() {
   const planNames: Record<string, string> = {
     pro_python: "Python Pro",
     pro_javascript: "JavaScript Pro",
-    pro_all: "Pro All (210 Lessons)",
+    pro_all: "Pro All (310 Lessons)",
     vibe_pro: "Vibe Pro (Unlimited AI)",
   };
 
