@@ -29,12 +29,18 @@ export default function AdminPage() {
   const [grantEmail, setGrantEmail] = useState("");
   const [message, setMessage] = useState("");
 
+  const [denied, setDenied] = useState(false);
+
   useEffect(() => {
     async function load() {
       const meRes = await fetch("/api/auth/me").then((r) => r.json()).catch(() => ({ error: true }));
       if (meRes.error) { window.location.href = "/login"; return; }
-      const statsRes = await fetch("/api/admin/stats").then((r) => r.json()).catch(() => null);
-      if (statsRes) setStats(statsRes.stats || statsRes);
+
+      const statsRes = await fetch("/api/admin/stats");
+      if (statsRes.status === 403) { setDenied(true); setLoading(false); return; }
+      const statsData = await statsRes.json().catch(() => null);
+      if (statsData?.stats) setStats(statsData.stats);
+
       const codesRes = await fetch("/api/promo").then((r) => r.json()).catch(() => ({ codes: [] }));
       if (codesRes.codes) setCodes(codesRes.codes);
       setLoading(false);
@@ -75,6 +81,16 @@ export default function AdminPage() {
   }
 
   if (loading) return <div className="flex items-center justify-center min-h-[60vh] text-gray-400">Loading...</div>;
+
+  if (denied) return (
+    <div className="flex items-center justify-center min-h-[60vh] text-center px-4">
+      <div>
+        <div className="text-4xl mb-4">🔒</div>
+        <h1 className="text-2xl font-bold mb-2">Access Denied</h1>
+        <p className="text-gray-400">The admin dashboard is restricted to authorized accounts only.</p>
+      </div>
+    </div>
+  );
 
   const statCards = stats ? [
     { label: "Total Users", value: stats.totalUsers },

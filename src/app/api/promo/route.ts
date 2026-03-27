@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken, redeemPromoCode, createPromoCode, getPromoCodes } from "@/lib/db";
+import { verifyToken, getUserById, redeemPromoCode, createPromoCode, getPromoCodes } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
-// Redeem a promo code
+const ADMIN_EMAILS = ["jeffersonsclark@gmail.com"];
+
+function isAdmin(userId: string): boolean {
+  const user = getUserById(userId);
+  return !!user && ADMIN_EMAILS.includes(user.email.toLowerCase());
+}
+
+// Redeem a promo code (any logged-in user)
 export async function POST(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   if (!token) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
@@ -17,21 +24,24 @@ export async function POST(req: NextRequest) {
   return NextResponse.json(result);
 }
 
-// Admin: create promo code or list all
+// Admin: list all promo codes
 export async function GET(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   if (!token) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   const userId = verifyToken(token);
   if (!userId) return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+  if (!isAdmin(userId)) return NextResponse.json({ error: "Not authorized" }, { status: 403 });
 
   return NextResponse.json({ codes: getPromoCodes() });
 }
 
+// Admin: create promo code
 export async function PUT(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   if (!token) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   const userId = verifyToken(token);
   if (!userId) return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+  if (!isAdmin(userId)) return NextResponse.json({ error: "Not authorized" }, { status: 403 });
 
   const { code, planType, maxUses, note } = await req.json();
   if (!code || !planType) return NextResponse.json({ error: "Code and planType required" }, { status: 400 });
