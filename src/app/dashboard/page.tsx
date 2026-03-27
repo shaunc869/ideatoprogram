@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+
 import Link from "next/link";
 
 interface User {
@@ -17,25 +17,32 @@ interface Progress {
 }
 
 export default function DashboardPage() {
-  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [progress, setProgress] = useState<Progress | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      fetch("/api/auth/me").then((r) => r.json()),
-      fetch("/api/progress").then((r) => r.json()).catch(() => ({ progress: null })),
-    ]).then(([userData, progressData]) => {
+    async function loadData() {
+      let userData = await fetch("/api/auth/me").then((r) => r.json()).catch(() => ({ error: true }));
+
+      // If first attempt fails, wait and retry once (cookie may still be setting)
       if (userData.error) {
-        router.push("/login");
-      } else {
-        setUser(userData.user);
-        if (progressData.progress) setProgress(progressData.progress);
+        await new Promise((r) => setTimeout(r, 500));
+        userData = await fetch("/api/auth/me").then((r) => r.json()).catch(() => ({ error: true }));
       }
+
+      if (userData.error) {
+        window.location.href = "/login";
+        return;
+      }
+
+      setUser(userData.user);
+      const progressData = await fetch("/api/progress").then((r) => r.json()).catch(() => ({ progress: null }));
+      if (progressData.progress) setProgress(progressData.progress);
       setLoading(false);
-    });
-  }, [router]);
+    }
+    loadData();
+  }, []);
 
   if (loading) {
     return <div className="flex items-center justify-center min-h-[60vh] text-gray-400">Loading...</div>;

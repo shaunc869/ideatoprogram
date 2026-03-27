@@ -19,10 +19,12 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      // Also set cookie client-side as backup
+      // Set cookie client-side to guarantee it's available immediately
       if (data.token) {
         document.cookie = `token=${data.token}; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
       }
+      // Small delay to ensure cookie is stored before redirect
+      await new Promise((r) => setTimeout(r, 100));
       window.location.href = "/dashboard";
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Login failed");
