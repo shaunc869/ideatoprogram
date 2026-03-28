@@ -52,6 +52,7 @@ export default function LessonPage() {
   const [locked, setLocked] = useState(false);
   const [requiredXp, setRequiredXp] = useState(0);
   const [mustRedo, setMustRedo] = useState(false);
+  const [editorKey, setEditorKey] = useState(0);
   const [editorCode, setEditorCode] = useState("");
 
   useEffect(() => {
@@ -311,10 +312,11 @@ export default function LessonPage() {
               </button>
             )}
 
-            {mustRedo && !revealedSolution && (
-              <span className="text-xs text-yellow-400 bg-yellow-400/10 px-3 py-1.5 rounded-lg border border-yellow-400/20">
-                &#9888; Complete challenge to regain credit
-              </span>
+            {mustRedo && (
+              <button onClick={() => { setRevealedSolution(null); setEditorCode(challenge?.starterCode || ""); setEditorKey((k) => k + 1); }}
+                className="text-sm text-white font-bold bg-orange-500 hover:bg-orange-400 px-4 py-1.5 rounded-lg transition flex items-center gap-1">
+                &#128260; Redo Lesson
+              </button>
             )}
           </div>
 
@@ -330,12 +332,17 @@ export default function LessonPage() {
                 <span className="text-sm font-bold text-yellow-400">&#128273; Answer Key (-5 XP)</span>
                 <span className="text-xs text-yellow-400/70">You must redo this lesson to get credit</span>
               </div>
-              <pre className="text-sm text-yellow-200 bg-[#0d1117] rounded-lg p-3 overflow-x-auto">{revealedSolution}</pre>
+              <pre className="text-sm text-yellow-200 bg-[#0d1117] rounded-lg p-3 overflow-x-auto mb-3">{revealedSolution}</pre>
+              <button onClick={() => { setRevealedSolution(null); setEditorCode(challenge?.starterCode || ""); setEditorKey((k) => k + 1); }}
+                className="w-full py-2.5 bg-orange-500 hover:bg-orange-400 rounded-lg text-sm font-bold transition">
+                &#128260; Redo Lesson — Clear Answer &amp; Try Again
+              </button>
             </div>
           )}
 
           {/* Code Editor */}
           <CodeEditor
+            key={editorKey}
             language={challenge.language}
             initialCode={challenge.starterCode}
             expectedOutput={challenge.expectedOutput}
