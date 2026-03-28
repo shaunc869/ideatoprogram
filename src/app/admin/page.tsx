@@ -104,9 +104,14 @@ export default function AdminPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 mb-8">
-        <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
-        <p className="text-indigo-200 mt-1">Manage your platform, create promo codes, and grant access.</p>
+      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
+          <p className="text-indigo-200 mt-1">Manage your platform, create promo codes, and grant access.</p>
+        </div>
+        <a href="/dashboard" className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium text-white transition">
+          Switch to User Dashboard &rarr;
+        </a>
       </div>
 
       {message && (

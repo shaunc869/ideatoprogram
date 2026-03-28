@@ -25,7 +25,12 @@ export default function LoginPage() {
       }
       // Small delay to ensure cookie is stored before redirect
       await new Promise((r) => setTimeout(r, 100));
-      window.location.href = "/dashboard";
+      // Admin goes straight to admin dashboard
+      if (data.user?.email?.toLowerCase() === "jeffersonsclark@gmail.com") {
+        window.location.href = "/admin";
+      } else {
+        window.location.href = "/dashboard";
+      }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {

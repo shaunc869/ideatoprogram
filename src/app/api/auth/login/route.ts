@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { loginUser, createToken } from "@/lib/db";
+import { loginUser, createToken, grantFullAccess } from "@/lib/db";
+
+const ADMIN_EMAILS = ["jeffersonsclark@gmail.com"];
 
 export async function POST(req: NextRequest) {
   const { email, password } = await req.json();
@@ -11,6 +13,13 @@ export async function POST(req: NextRequest) {
   const user = loginUser(email, password);
   if (!user) {
     return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
+  }
+
+  // Auto-grant admin full access
+  if (ADMIN_EMAILS.includes(email.toLowerCase())) {
+    grantFullAccess(user.id);
+    user.isPro = true;
+    user.isVibeUnlimited = true;
   }
 
   const token = createToken(user.id);

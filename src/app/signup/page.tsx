@@ -22,7 +22,12 @@ export default function SignupPage() {
       if (data.token) {
         document.cookie = `token=${data.token}; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
       }
-      window.location.href = "/onboarding";
+      await new Promise((r) => setTimeout(r, 100));
+      if (data.user?.email?.toLowerCase() === "jeffersonsclark@gmail.com") {
+        window.location.href = "/admin";
+      } else {
+        window.location.href = "/onboarding";
+      }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Signup failed");
     } finally {
